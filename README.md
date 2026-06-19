@@ -62,19 +62,43 @@ This repo is itself a Claude Code plugin marketplace. In Claude Code, run:
 Then start a conversation and ask to file your ITR — Claude will use the
 `file-return` skill automatically.
 
+### Claude Desktop / claude.ai
+
+This skill is self-contained under `skills/file-return/` — `tax_engine` and
+the reference docs it needs live inside that folder, with no dependency on
+anything elsewhere in this repo.
+
+1. Clone or download this repo.
+2. Zip the `skills/file-return/` folder (the zip's root should be the
+   `file-return` folder itself, containing `SKILL.md`, `tax_engine/`, and
+   `reference/`).
+3. Upload it as a custom skill via Claude Desktop/claude.ai's skill
+   settings.
+
+> **Note:** the exact custom-skill upload UI and any plan-tier
+> restrictions (e.g. Pro/Max/Team/Enterprise) weren't independently
+> verified while building this — if step 3 doesn't match what you see in
+> your client, check Anthropic's current Agent Skills documentation.
+
 ## How it works
 
 - `skills/file-return/SKILL.md` — the Claude Code skill that drives the
   end-to-end flow: collect documents → extract figures → confirm with the
   user → compute → write the portal checklist.
-- `tax_engine/` — a standalone, dependency-free Python package (managed with
-  `uv`) that does all tax arithmetic deterministically: slabs, surcharge,
-  capital gains, house property, and regime comparison. The skill calls into
-  it rather than reasoning about tax math itself.
-- `reference/income_tax_code_excerpts.md` — the statutory rules and
-  citations (Income-tax Act, 2025) backing every computation.
-- `reference/portal_navigation_guide.md` — maps each computed figure to its
-  field on the incometax.gov.in ITR-2 form.
+- `skills/file-return/tax_engine/` — a standalone, dependency-free Python
+  package that does all tax arithmetic deterministically: slabs, surcharge,
+  capital gains, house property, and regime comparison. The skill calls
+  into it (via plain `python3`, no package manager needed) rather than
+  reasoning about tax math itself.
+- `skills/file-return/reference/income_tax_code_excerpts.md` — the
+  statutory rules and citations (Income-tax Act, 2025) backing every
+  computation.
+- `skills/file-return/reference/portal_navigation_guide.md` — maps each
+  computed figure to its field on the incometax.gov.in ITR-2 form.
+
+Everything the skill needs lives inside `skills/file-return/`, so that
+folder alone is a complete, portable unit — usable as a Claude Code plugin
+skill or zipped up for Claude Desktop/claude.ai.
 
 ## Status
 
