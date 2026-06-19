@@ -40,7 +40,14 @@ output.
 
 1. **Collect documents.** Ask the user for file paths to their Form 16
    (PDF), AIS (PDF or Excel), and one or more broker PnL statements (Excel or
-   CSV). Read each file directly.
+   CSV). Read each file directly. Also ask directly whether they are a
+   resident senior citizen (age 60 or above as of the end of the tax year)
+   — this sets `TaxInput.is_senior_citizen` and changes the old-regime basic
+   exemption and 80D cap; don't try to infer it from Form 16, since it
+   doesn't reliably state date of birth. If they're 80+ (super senior),
+   tell them this plugin's v1 doesn't have a separate super-senior tier and
+   their actual old-regime exemption may be higher than what gets computed
+   here — flag it as a caveat in the final report rather than guessing.
 
 2. **Extract.** Pull out:
    - From Form 16: gross salary (`salary_gross`), any other taxable income
