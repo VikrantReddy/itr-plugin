@@ -61,9 +61,15 @@ output.
      These two deduction fields only matter for the old-regime comparison —
      ask even if the user expects the new regime to win, since that's
      exactly the comparison this skill exists to make.
-   - From AIS: every income head reported (salary, interest, dividends,
-     securities transactions) — used only for cross-checking, not for the
-     computation itself.
+   - From AIS: every income head reported. AIS is the primary source for
+     `other_income` (interest, dividends, and any other non-salary,
+     non-capital-gains income) — sum these into `TaxInput.other_income`.
+     AIS's salary and securities-transaction entries are *not* fed into the
+     computation directly (Form 16 and the PnL statements are the
+     authoritative sources for those); instead, cross-check AIS's salary and
+     securities figures against what you extracted from Form 16/PnL and
+     surface any mismatch as a warning in step 4 rather than silently
+     reconciling it.
    - From PnL statements: every capital gains transaction, classified into
      `tax_engine.models.AssetClass` (`EQUITY_STT` for listed equity/equity
      funds/business trust units with STT paid, `GENERAL` for debt
